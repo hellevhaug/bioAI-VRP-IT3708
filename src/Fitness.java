@@ -39,9 +39,8 @@ public class Fitness {
         return fitness;
     }
 
-    public double[] getRegularFitnessArray(ArrayList<ArrayList<Integer>> population) {
-        double[] fitness = new double[population.size()];
-        double min_val = 30000;
+    public ArrayList<Double> getRegularFitnessArray(ArrayList<ArrayList<Integer>> population) {
+        ArrayList<Double> fitness = new ArrayList<Double>();
         for (int i = 0; i < population.size(); i++) {
             ArrayList<Integer> individual = population.get(i);
             double indFitness = 0;
@@ -49,11 +48,7 @@ public class Fitness {
                 indFitness += travelTimes[individual.get(j)][individual.get(j + 1)];
 
             }
-            fitness[i] = indFitness;
-            if (min_val > indFitness) {
-                min_val = indFitness;
-                // System.out.println("i: " + i + " Fitness: " + min_val);
-            }
+            fitness.add(indFitness);
         }
         return fitness;
     }

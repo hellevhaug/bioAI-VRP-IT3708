@@ -1,7 +1,21 @@
 import java.util.ArrayList;
 
 public class Offspring {
-    public ArrayList<ArrayList<Integer>> createOffspring(ArrayList<ArrayList<Integer>> parents, double pC, double pM, int lambda) {
+    public int nbrNurses;
+    public int capacityNurse;
+    public Depot depot;
+    public double[][] travelTimes;
+    public Patient[] patients;
+    public double[] parentFitness;
+
+    public Offspring(int nbrNurses, int capacityNurse, Depot depot, Patient[] patients, double[][] travelTimes) {
+        this.nbrNurses = nbrNurses;
+        this.capacityNurse = capacityNurse;
+        this.depot = depot;
+        this.travelTimes = travelTimes;
+        this.patients = patients;
+    }
+    public ArrayList<ArrayList<Integer>> createOffspring(ArrayList<ArrayList<Integer>> parents, ArrayList<Double> parentsFitness,  double pC, double pM, int lambda) {
         ArrayList<ArrayList<Integer>> offsprings = new ArrayList<ArrayList<Integer>>((int) lambda * parents.size());
         // TODO Implement Crossover and more mutations
 

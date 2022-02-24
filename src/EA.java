@@ -12,7 +12,7 @@ public class EA {
         int popSize = 50000;
         double pC = 0.9;
         double pM = 0.0007;
-        int lambda = 7;
+        int lambda = 7; // 3 is more populare now a days
 
         // Load JSON
         TrainData data = new TrainData();
@@ -28,18 +28,23 @@ public class EA {
         double[][] travelTimes = data.getTravelTime(trainInstance);
          
         // Set up SGA
-        Population pop = new Population(nbrNurses, capacityNurse, depot, patients, travelTimes);
-        ArrayList<ArrayList<Integer>> population = pop.generatePopArray(trainInstance, nbrNurses, popSize);
+        Population populationClass = new Population(nbrNurses, capacityNurse, depot, patients, travelTimes);
+        ArrayList<ArrayList<Integer>> population = populationClass.generatePopArray(trainInstance, nbrNurses, popSize);
 
-        Fitness fit = new Fitness(nbrNurses, capacityNurse, depot, patients, travelTimes);
-        double[] fitness = fit.getRegularFitnessArray(population);
+        Fitness fitnessClass = new Fitness(nbrNurses, capacityNurse, depot, patients, travelTimes);
+        ArrayList<Double> fitness = fitnessClass.getRegularFitnessArray(population);
 
         // Consider to normalize fitness for greater selection pressure 
-        Parent par = new Parent(nbrNurses, capacityNurse, depot, patients, travelTimes);
-        ArrayList<ArrayList<Integer>> parents = par.selectParentsProbabilistic(fitness, population, popSize);
-        double[] parentFitness = par.parentFitness;
+        Parent parentClass = new Parent(nbrNurses, capacityNurse, depot, patients, travelTimes);
+        ArrayList<ArrayList<Integer>> parents = parentClass.selectParentsProbabilistic(fitness, population, popSize);
+        ArrayList<Double> parentFitness = parentClass.parentFitness;
 
-        Offspring off = new Offspring();
-        ArrayList<ArrayList<Integer>> offspring = off.createOffspring(population, pC, pM, lambda);
+        Offspring offspringClass = new Offspring(nbrNurses, capacityNurse, depot, patients, travelTimes);
+        ArrayList<ArrayList<Integer>> offspring = offspringClass.createOffspring(parents, parentFitness, pC, pM, lambda);
+        ArrayList<Double> offspringfitness = fitnessClass.getRegularFitnessArray(offspring); // This can definitly be optimized
+
+        // (lambda, mu)-selection, based on offspring only (lambda > mu) 
+        Survivor survivorClass = new Survivor(nbrNurses, capacityNurse, depot, patients, travelTimes);
+        ArrayList<ArrayList<Integer>> survivors = survivorClass.deterministicOffspringSelection(offspring, offspringfitness, popSize);
     }
 }

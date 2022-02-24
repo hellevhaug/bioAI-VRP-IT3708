@@ -18,6 +18,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.Spliterator.IMMUTABLE;
 import static java.util.Spliterator.ORDERED;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Random;
@@ -94,7 +95,7 @@ public final class RandomSelector<T> {
    */
   public static <T> RandomSelector<T> weighted(
       final Collection<T> elements,
-      final double[] weighter)
+      final ArrayList<Double> weighter)
       throws IllegalArgumentException {
     requireNonNull(elements, "elements must not be null");
     requireNonNull(weighter, "weighter must not be null");
@@ -105,7 +106,7 @@ public final class RandomSelector<T> {
     double totalWeight = 0d;
     final double[] discreteProbabilities = new double[size];
     for (int i = 0; i < size; i++) {
-      final double weight = weighter[i];
+      final double weight = weighter.get(i);
       discreteProbabilities[i] = weight;
       totalWeight += weight;
     }

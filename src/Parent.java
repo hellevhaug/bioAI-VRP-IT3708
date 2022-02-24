@@ -13,7 +13,7 @@ public class Parent {
     public Depot depot;
     public double[][] travelTimes;
     public Patient[] patients;
-    public double[] parentFitness;
+    public ArrayList<Double> parentFitness;
 
     public Parent(int nbrNurses, int capacityNurse, Depot depot, Patient[] patients, double[][] travelTimes) {
         this.nbrNurses = nbrNurses;
@@ -24,17 +24,17 @@ public class Parent {
     }
     // fetches elements in O(1), 
     // unlike what you mostly find on the internet or on StackOverflow, where naive implementations run in O(n) or O(log(n));
-    ArrayList<ArrayList<Integer>>  selectParentsProbabilistic(double[] fitness, ArrayList<ArrayList<Integer>> population, int nbrParents){
+    ArrayList<ArrayList<Integer>>  selectParentsProbabilistic(ArrayList<Double> fitness, ArrayList<ArrayList<Integer>> population, int nbrParents){
         Random random = new Random();
-        ArrayList<ArrayList<Integer>> parents = new ArrayList<ArrayList<Integer>>(population.size());
-        double[] parentFitness = new double[fitness.length];
+        ArrayList<ArrayList<Integer>> parents = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Double> parentFitness = new ArrayList<Double>();
 
         RandomSelector<ArrayList<Integer>> selector = RandomSelector.weighted(population, fitness);
         for(int i = 0; i < population.size(); i++){
             ArrayList<Integer> drop = selector.next(random);
             int index = selector.currentIndex;
             parents.add(drop);
-            parentFitness[i] = fitness[index];
+            parentFitness.add(fitness.get(index));
         }
         this.parentFitness = parentFitness;
         return parents;
