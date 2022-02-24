@@ -69,9 +69,7 @@ public class Population {
         }
         for (int i = 0; i < activeNurses; i++) {
             individual.add(0); // Depot start
-            int k = 1;
             for (int j = 1; j < this.patients.length; j++) {
-                k = j;
                 if (j <= patientPerNurse) {
                     int rando = (int) ((Math.random() * patientIndices.size()));
                     individual.add(patientIndices.get(rando));
@@ -91,6 +89,42 @@ public class Population {
         ArrayList<ArrayList<Integer>> population = new ArrayList<ArrayList<Integer>>(nbrIndividuals);
         for (int i = 0; i < nbrIndividuals; i++) {
             population.add(generateIndArray(trainInstance, activeNurses));
+        }
+        return population;
+    }
+
+
+    public ArrayList<ArrayList<Integer>> generateIndMatrix(JSONObject trainInstance, int activeNurses) {
+        if (!(this.patients.length % (activeNurses) == 0)) {
+            throw new AssertionError("Extend functionality for leftover patients");
+        }
+        int patientPerNurse = (int) this.patients.length / activeNurses;
+        ArrayList<ArrayList<Integer>> individual = new ArrayList<ArrayList<Integer>>(patientPerNurse);
+        ArrayList<Integer> patientIndices = new ArrayList<Integer>();
+        for (int i = 0; i < this.patients.length; i++) {
+            patientIndices.add(i);
+        }
+        for (int i = 0; i < activeNurses; i++) {
+            ArrayList<Integer> nursePath =  new ArrayList<Integer>(patientPerNurse); // Depot start
+            for (int j = 0; j < this.patients.length; j++) {
+                if (j < patientPerNurse) {
+                    int rando = (int) ((Math.random() * patientIndices.size()));
+                    nursePath.add(patientIndices.get(rando));
+                    patientIndices.remove(rando);
+                }
+            }
+        }
+
+        if (!(patientIndices.size() == 0)) {
+            throw new AssertionError("Not all patients are distributed, extend functionality!");
+        }
+        return individual;
+    }
+
+    public ArrayList<ArrayList<ArrayList<Integer>>> generatePopMatrix(JSONObject trainInstance, int activeNurses, int nbrIndividuals) {
+        ArrayList<ArrayList<ArrayList<Integer>>> population = new ArrayList<ArrayList<ArrayList<Integer>>>(nbrIndividuals);
+        for (int i = 0; i < nbrIndividuals; i++) {
+            population.add(generateIndMatrix(trainInstance, activeNurses));
         }
         return population;
     }

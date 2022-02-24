@@ -48,5 +48,4 @@ public class EA_irr {
         Survivor survivorClass = new Survivor(nbrNurses, capacityNurse, depot, patients, travelTimes);
         ArrayList<ArrayList<Integer>> survivors = survivorClass.deterministicOffspringSelection(offspring, offspringfitness, popSize);
     }
-    
 }

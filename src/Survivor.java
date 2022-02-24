@@ -8,6 +8,7 @@ public class Survivor {
     public double[][] travelTimes;
     public Patient[] patients;
     public double[] parentFitness;
+    public ArrayList<Double> prevSurvivorFitness;
 
     public Survivor(int nbrNurses, int capacityNurse, Depot depot, Patient[] patients, double[][] travelTimes) {
         this.nbrNurses = nbrNurses;
@@ -43,15 +44,21 @@ public class Survivor {
         return max_sum;
     }
 
-    public ArrayList<ArrayList<Integer>> deterministicOffspringSelection(ArrayList<ArrayList<Integer>> offspring, ArrayList<Double> offspringfitness, int nbrOffspring){
+    public ArrayList<ArrayList<Integer>> deterministicOffspringSelection(ArrayList<ArrayList<Integer>> offspring, ArrayList<Double> offspringTransFitness, int nbrOffspring){
         ArrayList<ArrayList<Integer>> survivors = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Double> survivorFitness = new ArrayList<Double>();
+
 
         KGreatestElements kGreatestElements = new KGreatestElements();
-        Iterator<double[]> iterator = kGreatestElements.FirstKelements(offspringfitness, offspringfitness.size(), nbrOffspring);
+        Iterator<double[]> iterator = kGreatestElements.FirstKelements(offspringTransFitness, offspringTransFitness.size(), nbrOffspring);
         while (iterator.hasNext()) {
-            System.out.print(iterator.next()[1] + " ");
-        }
+            int index = (int) iterator.next()[0];
+            int transFitness = (int) iterator.next()[1];
 
+            survivors.add(offspring.get(index));
+            survivorFitness.add(offspringTransFitness.get(index));
+        }
+        this.prevSurvivorFitness = survivorFitness;
         return survivors;
     }
 }
