@@ -55,9 +55,6 @@ class KGreatestElements {
 
         return iterator;
 
-        // while (iterator.hasNext()) {
-        //     System.out.print(iterator.next()[1] + " ");
-        // }
     }
 
     // test code
@@ -70,7 +67,6 @@ class KGreatestElements {
         arr.add(15.0);
         arr.add(5.0);
         arr.add(4.0);
-        arr.add(45.0);
         arr.add(88.0);
         arr.add(96.0);
         arr.add(50.0);
@@ -78,7 +74,7 @@ class KGreatestElements {
         int size = arr.size();
 
         // Size of Min Heap
-        int k = 3;
+        int k = 6;
 
         FirstKelements(arr, size, k);
     }

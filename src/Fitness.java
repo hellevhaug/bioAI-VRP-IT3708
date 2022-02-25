@@ -9,6 +9,7 @@ public class Fitness {
     public Patient[] patients;
     public double prevMaxFitness;
     public double prevMinFitness;
+    public ArrayList<ArrayList<Double>> fitnessMatrix; // Keeps record of the fitness for each path
 
     public Fitness(int nbrNurses, int capacityNurse, Depot depot, Patient[] patients, double[][] travelTimes) {
         this.nbrNurses = nbrNurses;
@@ -18,31 +19,7 @@ public class Fitness {
         this.patients = patients;
     }
 
-    public double[] getRegularFitness(int[][][] population) {
-        double[] fitness = new double[population.length];
-        double min_val = 30000;
-        for (int i = 0; i < population.length; i++) {
-            int[][] individual = population[i];
-            double indFitness = 0;
-            for (int j = 0; j < individual.length; j++) {
-                int[] patientRoute = individual[j];
-                for (int k = 0; j < patientRoute.length; k++) {
-                    indFitness += travelTimes[patientRoute[k]][patientRoute[k + 1]];
-                    if (patientRoute[k + 1] == 0) {
-                        break;
-                    }
-                }
-            }
-            fitness[i] = indFitness;
-            if (min_val > indFitness) {
-                min_val = indFitness;
-                System.out.println("i: " + i + " Fitness: " + min_val);
-            }
-        }
-        return fitness;
-    }
-
-    public ArrayList<Double> getRegularFitnessArray(ArrayList<ArrayList<Integer>> population) {
+    public ArrayList<Double> getRegularFitness(ArrayList<ArrayList<Integer>> population) {
         ArrayList<Double> fitness = new ArrayList<Double>();
         double maxVal = 0;
         double minVal = Math.pow(10, 10);

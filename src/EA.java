@@ -35,10 +35,10 @@ public class EA {
         for (int epoch = 1; epoch < epochs; epoch++) {
 
             Fitness fitnessClass = new Fitness(nbrNurses, capacityNurse, depot, patients, travelTimes);
-            ArrayList<Double> fitness = fitnessClass.getRegularFitnessArray(population);
+            ArrayList<Double> populationgFitness = fitnessClass.getRegularFitness(population);
             double popMaxFitVal = fitnessClass.prevMaxFitness;
             System.out.println(fitnessClass.prevMinFitness);
-            ArrayList<Double> transFitness = fitnessClass.transformFitnessArray(fitness, popMaxFitVal);
+            ArrayList<Double> transFitness = fitnessClass.transformFitnessArray(populationgFitness, popMaxFitVal);
 
             // Consider to normalize fitness for greater selection pressure
             Parent parentClass = new Parent(nbrNurses, capacityNurse, depot, patients, travelTimes);
@@ -49,11 +49,12 @@ public class EA {
             Offspring offspringClass = new Offspring(nbrNurses, capacityNurse, depot, patients, travelTimes);
             ArrayList<ArrayList<Integer>> offspring = offspringClass.createOffspring(parents, parentTransFitness, pC,
                     pM, lambda);
-            ArrayList<Double> offspringFitness = fitnessClass.getRegularFitnessArray(offspring); // This can definitly
+            ArrayList<Double> offspringFitness = fitnessClass.getRegularFitness(offspring); // This can definitly
                                                                                                  // be optimized
             double offMaxFitVal = fitnessClass.prevMaxFitness;
             ArrayList<Double> offspringTransFitness = fitnessClass.transformFitnessArray(offspringFitness,
                     offMaxFitVal);
+
 
             // (lambda, mu)-selection, based on offspring only (lambda > mu)
             Survivor survivorClass = new Survivor(nbrNurses, capacityNurse, depot, patients, travelTimes);

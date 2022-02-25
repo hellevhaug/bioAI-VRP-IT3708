@@ -18,45 +18,6 @@ public class Population {
         this.patients = patients;
     }
 
-    public int[][] generateIndividual(JSONObject trainInstance, int activeNurses) {
-        int[][] individual = new int[activeNurses][this.patients.length]; // Worst case: 1 nurse => all patients
-        if (!(this.patients.length % (activeNurses) == 0)) {
-            throw new AssertionError("Extend functionality for leftover patients");
-        }
-        double patientPerNurse = this.patients.length / activeNurses;
-        ArrayList<Integer> patientIndices = new ArrayList<Integer>();
-        for (int i = 0; i < this.patients.length; i++) {
-            patientIndices.add(i);
-        }
-
-        for (int i = 0; i < activeNurses; i++) {
-            individual[i][0] = 0; // Depot start
-            int k = 1;
-            for (int j = 1; j < this.patients.length; j++) {
-                k = j;
-                if (j <= patientPerNurse) {
-                    int rando = (int) ((Math.random() * patientIndices.size()));
-                    individual[i][j] = patientIndices.get(rando);
-                    patientIndices.remove(rando);
-                }
-            }
-            individual[i][k] = 0; // Depot end
-        }
-
-        if (!(patientIndices.size() == 0)) {
-            throw new AssertionError("Not all patients are distributed, extend functionality!");
-        }
-        return individual;
-    }
-
-    public int[][][] generatePopulation(JSONObject trainInstance, int activeNurses, int nbrIndividuals) {
-        int[][][] population = new int[nbrIndividuals][activeNurses][this.patients.length];
-        for (int i = 0; i < nbrIndividuals; i++) {
-            population[i] = generateIndividual(trainInstance, activeNurses);
-        }
-        return population;
-    }
-
     public ArrayList<Integer> generateIndArray(JSONObject trainInstance, int activeNurses) {
         ArrayList<Integer> individual = new ArrayList<Integer>();
         if (!(this.patients.length % (activeNurses) == 0)) {
@@ -78,7 +39,6 @@ public class Population {
             }
             individual.add(0); // Depot end
         }
-
         if (!(patientIndices.size() == 0)) {
             throw new AssertionError("Not all patients are distributed, extend functionality!");
         }
@@ -93,40 +53,5 @@ public class Population {
         return population;
     }
 
-
-    public ArrayList<ArrayList<Integer>> generateIndMatrix(JSONObject trainInstance, int activeNurses) {
-        if (!(this.patients.length % (activeNurses) == 0)) {
-            throw new AssertionError("Extend functionality for leftover patients");
-        }
-        int patientPerNurse = (int) this.patients.length / activeNurses;
-        ArrayList<ArrayList<Integer>> individual = new ArrayList<ArrayList<Integer>>(patientPerNurse);
-        ArrayList<Integer> patientIndices = new ArrayList<Integer>();
-        for (int i = 0; i < this.patients.length; i++) {
-            patientIndices.add(i);
-        }
-        for (int i = 0; i < activeNurses; i++) {
-            ArrayList<Integer> nursePath =  new ArrayList<Integer>(patientPerNurse); // Depot start
-            for (int j = 0; j < this.patients.length; j++) {
-                if (j < patientPerNurse) {
-                    int rando = (int) ((Math.random() * patientIndices.size()));
-                    nursePath.add(patientIndices.get(rando));
-                    patientIndices.remove(rando);
-                }
-            }
-        }
-
-        if (!(patientIndices.size() == 0)) {
-            throw new AssertionError("Not all patients are distributed, extend functionality!");
-        }
-        return individual;
-    }
-
-    public ArrayList<ArrayList<ArrayList<Integer>>> generatePopMatrix(JSONObject trainInstance, int activeNurses, int nbrIndividuals) {
-        ArrayList<ArrayList<ArrayList<Integer>>> population = new ArrayList<ArrayList<ArrayList<Integer>>>(nbrIndividuals);
-        for (int i = 0; i < nbrIndividuals; i++) {
-            population.add(generateIndMatrix(trainInstance, activeNurses));
-        }
-        return population;
-    }
 }
 

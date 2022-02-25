@@ -33,7 +33,7 @@ public class EA_irr {
         ArrayList<ArrayList<Integer>> population = populationClass.generatePopArray(trainInstance, nbrNurses, popSize);
 
         Fitness fitnessClass = new Fitness(nbrNurses, capacityNurse, depot, patients, travelTimes);
-        ArrayList<Double> fitness = fitnessClass.getRegularFitnessArray(population);
+        ArrayList<Double> fitness = fitnessClass.getRegularFitness(population);
 
         // Consider to normalize fitness for greater selection pressure 
         Parent parentClass = new Parent(nbrNurses, capacityNurse, depot, patients, travelTimes);
@@ -42,7 +42,7 @@ public class EA_irr {
 
         Offspring offspringClass = new Offspring(nbrNurses, capacityNurse, depot, patients, travelTimes);
         ArrayList<ArrayList<Integer>> offspring = offspringClass.createOffspring(parents, parentFitness, pC, pM, lambda);
-        ArrayList<Double> offspringfitness = fitnessClass.getRegularFitnessArray(offspring); // This can definitly be optimized
+        ArrayList<Double> offspringfitness = fitnessClass.getRegularFitness(offspring); // This can definitly be optimized
 
         // (lambda, mu)-selection, based on offspring only (lambda > mu) 
         Survivor survivorClass = new Survivor(nbrNurses, capacityNurse, depot, patients, travelTimes);

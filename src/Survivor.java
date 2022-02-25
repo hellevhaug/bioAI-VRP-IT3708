@@ -1,5 +1,11 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Survivor {
     public int nbrNurses;
@@ -17,47 +23,36 @@ public class Survivor {
         this.travelTimes = travelTimes;
         this.patients = patients;
     }
-    
-    static int maxSum(int arr[], int n, int k)
-    {
-        // n must be greater
-        if (n < k) {
-            System.out.println("Invalid");
-            return -1;
-        }
- 
-        // Compute sum of first window of size k
-        int max_sum = 0;
-        for (int i = 0; i < k; i++)
-            max_sum += arr[i];
- 
-        // Compute sums of remaining windows by
-        // removing first element of previous
-        // window and adding last element of
-        // current window.
-        int window_sum = max_sum;
-        for (int i = k; i < n; i++) {
-            window_sum += arr[i] - arr[i - k];
-            max_sum = Math.max(max_sum, window_sum);
-        }
- 
-        return max_sum;
-    }
+
+    public static Map sortByValue(Map unsortedMap) {
+		Map sortedMap = new TreeMap(new ValueComparator(unsortedMap));
+		sortedMap.putAll(unsortedMap);
+		return sortedMap;
+	}
 
     public ArrayList<ArrayList<Integer>> deterministicOffspringSelection(ArrayList<ArrayList<Integer>> offspring, ArrayList<Double> offspringTransFitness, int nbrOffspring){
         ArrayList<ArrayList<Integer>> survivors = new ArrayList<ArrayList<Integer>>();
         ArrayList<Double> survivorFitness = new ArrayList<Double>();
-
-
-        KGreatestElements kGreatestElements = new KGreatestElements();
-        Iterator<double[]> iterator = kGreatestElements.FirstKelements(offspringTransFitness, offspringTransFitness.size(), nbrOffspring);
-        while (iterator.hasNext()) {
-            int index = (int) iterator.next()[0];
-            int transFitness = (int) iterator.next()[1];
-
-            survivors.add(offspring.get(index));
-            survivorFitness.add(offspringTransFitness.get(index));
+        // System.out.println(offspringTransFitness);
+        
+        HashMap<Integer, Double> map = new HashMap<Integer, Double>();
+        for (int i = 0; i < offspringTransFitness.size(); i++) {
+            map.put(i, offspringTransFitness.get(i));
         }
+
+        Map sortedMap = sortByValue(map); 
+
+        int i = 0;
+        for (Object entry : sortedMap.keySet()){
+            // System.out.println(entry + "  " + sortedMap.get(entry));
+            survivors.add(offspring.get((int) entry));
+            survivorFitness.add((double) sortedMap.get(entry));
+            if(i == nbrOffspring-1){
+                break;
+            }
+            i ++;
+
+}
         this.prevSurvivorFitness = survivorFitness;
         return survivors;
     }
