@@ -20,7 +20,7 @@ public class EA {
         JSONArray trainArray = data.getTrainArray();
         JSONObject trainInstance = (JSONObject) trainArray.get(trainInstanceIndex);
 
-        // Get datastructures
+        // Get datastructuresgit 
         int nbrNurses = Integer.parseInt(Long.toString((Long) trainInstance.get("nbr_nurses")));
         int capacityNurse = Integer.parseInt(Long.toString((Long) trainInstance.get("capacity_nurse")));
         double benchmark = (double) trainInstance.get("benchmark");
@@ -30,7 +30,7 @@ public class EA {
 
         // Set up SGA
         Population populationClass = new Population(nbrNurses, capacityNurse, depot, patients, travelTimes);
-        ArrayList<ArrayList<Integer>> population = populationClass.generatePopArray(trainInstance, nbrNurses, popSize);
+        ArrayList<Individual> population = populationClass.generatePopArray(trainInstance, nbrNurses, popSize);
 
         for (int epoch = 1; epoch < epochs; epoch++) {
 
@@ -42,12 +42,12 @@ public class EA {
 
             // Consider to normalize fitness for greater selection pressure
             Parent parentClass = new Parent(nbrNurses, capacityNurse, depot, patients, travelTimes);
-            ArrayList<ArrayList<Integer>> parents = parentClass.selectParentsProbabilistic(transFitness, population,
+            ArrayList<Individual> parents = parentClass.selectParentsProbabilistic(transFitness, population,
                     popSize);
             ArrayList<Double> parentTransFitness = parentClass.parentFitness;
 
             Offspring offspringClass = new Offspring(nbrNurses, capacityNurse, depot, patients, travelTimes);
-            ArrayList<ArrayList<Integer>> offspring = offspringClass.createOffspring(parents, parentTransFitness, pC,
+            ArrayList<Individual> offspring = offspringClass.createOffspring(parents, parentTransFitness, pC,
                     pM, lambda);
             ArrayList<Double> offspringFitness = fitnessClass.getRegularFitness(offspring); // This can definitly
                                                                                                  // be optimized
@@ -58,7 +58,7 @@ public class EA {
 
             // (lambda, mu)-selection, based on offspring only (lambda > mu)
             Survivor survivorClass = new Survivor(nbrNurses, capacityNurse, depot, patients, travelTimes);
-            ArrayList<ArrayList<Integer>> survivors = survivorClass.deterministicOffspringSelection(offspring,
+            ArrayList<Individual> survivors = survivorClass.deterministicOffspringSelection(offspring,
                     offspringTransFitness, popSize);
             ArrayList<Double> survivorTransFitness = survivorClass.prevSurvivorFitness;
             population = survivors;

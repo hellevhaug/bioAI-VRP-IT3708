@@ -24,14 +24,14 @@ public class Parent {
     }
     // fetches elements in O(1), 
     // unlike what you mostly find on the internet or on StackOverflow, where naive implementations run in O(n) or O(log(n));
-    ArrayList<ArrayList<Integer>>  selectParentsProbabilistic(ArrayList<Double> fitness, ArrayList<ArrayList<Integer>> population, int nbrParents){
+    ArrayList<Individual>  selectParentsProbabilistic(ArrayList<Double> fitness,  ArrayList<Individual> population, int nbrParents){
         Random random = new Random();
-        ArrayList<ArrayList<Integer>> parents = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Individual> parents = new  ArrayList<Individual>();
         ArrayList<Double> parentFitness = new ArrayList<Double>();
 
-        RandomSelector<ArrayList<Integer>> selector = RandomSelector.weighted(population, fitness);
+        RandomSelector<Individual> selector = RandomSelector.weighted(population, fitness);
         for(int i = 0; i < population.size(); i++){
-            ArrayList<Integer> drop = selector.next(random);
+            Individual drop = selector.next(random);
             int index = selector.currentIndex;
             parents.add(drop);
             parentFitness.add(fitness.get(index));

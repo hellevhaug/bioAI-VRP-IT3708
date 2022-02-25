@@ -19,15 +19,16 @@ public class Fitness {
         this.patients = patients;
     }
 
-    public ArrayList<Double> getRegularFitness(ArrayList<ArrayList<Integer>> population) {
+    public ArrayList<Double> getRegularFitness(ArrayList<Individual> population) {
         ArrayList<Double> fitness = new ArrayList<Double>();
         double maxVal = 0;
         double minVal = Math.pow(10, 10);
         for (int i = 0; i < population.size(); i++) {
-            ArrayList<Integer> individual = population.get(i);
+            Individual individual = population.get(i);
+            ArrayList<Integer> routes = individual.routes;
             double indFitness = 0;
-            for (int j = 0; j < individual.size() - 1; j++) {
-                indFitness += travelTimes[individual.get(j)][individual.get(j + 1)];
+            for (int j = 0; j < routes.size() - 1; j++) {
+                indFitness += travelTimes[routes.get(j)][routes.get(j + 1)];
 
             }
             if(indFitness > maxVal){

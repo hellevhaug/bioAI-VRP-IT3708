@@ -30,12 +30,11 @@ public class Survivor {
 		return sortedMap;
 	}
 
-    public ArrayList<ArrayList<Integer>> deterministicOffspringSelection(ArrayList<ArrayList<Integer>> offspring, ArrayList<Double> offspringTransFitness, int nbrOffspring){
-        ArrayList<ArrayList<Integer>> survivors = new ArrayList<ArrayList<Integer>>();
+    public ArrayList<Individual> deterministicOffspringSelection(ArrayList<Individual>offspring, ArrayList<Double> offspringTransFitness, int nbrOffspring){
+        ArrayList<Individual> survivors = new ArrayList<Individual>();
         ArrayList<Double> survivorFitness = new ArrayList<Double>();
-        // System.out.println(offspringTransFitness);
         
-        HashMap<Integer, Double> map = new HashMap<Integer, Double>();
+        HashMap<Integer, Double> map = new HashMap<Integer, Double>(); // This is not neccassary, create this in Offspring class
         for (int i = 0; i < offspringTransFitness.size(); i++) {
             map.put(i, offspringTransFitness.get(i));
         }
