@@ -1,5 +1,6 @@
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.simple.JSONObject;
 
@@ -8,9 +9,9 @@ public class Population {
     public int capacityNurse;
     public Depot depot;
     public double[][] travelTimes;
-    public Patient[] patients;
+    public HashMap<Integer, Patient> patients;
 
-    public Population(int nbrNurses, int capacityNurse, Depot depot, Patient[] patients, double[][] travelTimes) {
+    public Population(int nbrNurses, int capacityNurse, Depot depot, HashMap<Integer, Patient> patients, double[][] travelTimes) {
         this.nbrNurses = nbrNurses;
         this.capacityNurse = capacityNurse;
         this.depot = depot;

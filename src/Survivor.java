@@ -12,11 +12,11 @@ public class Survivor {
     public int capacityNurse;
     public Depot depot;
     public double[][] travelTimes;
-    public Patient[] patients;
+    public HashMap<Integer, Patient> patients;
     public double[] parentFitness;
     public ArrayList<Double> prevSurvivorFitness;
 
-    public Survivor(int nbrNurses, int capacityNurse, Depot depot, Patient[] patients, double[][] travelTimes) {
+    public Survivor(int nbrNurses, int capacityNurse, Depot depot, HashMap<Integer, Patient> patients, double[][] travelTimes) {
         this.nbrNurses = nbrNurses;
         this.capacityNurse = capacityNurse;
         this.depot = depot;

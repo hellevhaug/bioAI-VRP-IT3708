@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -12,10 +13,10 @@ public class Parent {
     public int capacityNurse;
     public Depot depot;
     public double[][] travelTimes;
-    public Patient[] patients;
+    public HashMap<Integer, Patient> patients;
     public ArrayList<Double> parentFitness;
 
-    public Parent(int nbrNurses, int capacityNurse, Depot depot, Patient[] patients, double[][] travelTimes) {
+    public Parent(int nbrNurses, int capacityNurse, Depot depot, HashMap<Integer, Patient> patients, double[][] travelTimes) {
         this.nbrNurses = nbrNurses;
         this.capacityNurse = capacityNurse;
         this.depot = depot;

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ListIterator;
 
 public class Fitness {
@@ -6,13 +7,14 @@ public class Fitness {
     public int capacityNurse;
     public Depot depot;
     public double[][] travelTimes;
-    public Patient[] patients;
+    public HashMap<Integer, Patient> patients;
     public double prevMaxFitness;
     public double prevMinFitness;
     public double prevMinPenalty;
     public ArrayList<ArrayList<Double>> fitnessMatrix; // Keeps record of the fitness for each path
 
-    public Fitness(int nbrNurses, int capacityNurse, Depot depot, Patient[] patients, double[][] travelTimes) {
+    public Fitness(int nbrNurses, int capacityNurse, Depot depot, HashMap<Integer, Patient> patients,
+            double[][] travelTimes) {
         this.nbrNurses = nbrNurses;
         this.capacityNurse = capacityNurse;
         this.depot = depot;
@@ -33,10 +35,10 @@ public class Fitness {
                 indFitness += travelTimes[routes.get(j)][routes.get(j + 1)];
 
             }
-            if(indFitness > maxVal){
+            if (indFitness > maxVal) {
                 maxVal = indFitness;
             }
-            if(indFitness < minVal){
+            if (indFitness < minVal) {
                 minVal = indFitness;
             }
             fitness.add(indFitness);
@@ -58,64 +60,90 @@ public class Fitness {
             Individual individual = population.get(i);
             ArrayList<Integer> routes = individual.routes;
 
-            double travelDuration = 0;  
+            double travelDuration = 0;
             double penaltyCapacity = 0;
-            double penaltyMissedCareTime = 0; 
+            double penaltyMissedCareTime = 0;
 
-            double nurseClock = 0;            
+            double nurseClock = 0;
             double nurseUsage = 0;
+            boolean newNurse = true;
 
-            for (int j = 0; j < routes.size() - 1; j++) {
-                Patient patient = this.patients[routes.get(j + 1)];
-                double travel = travelTimes[routes.get(j)][routes.get(j + 1)];
-                nurseClock += travel;
-                travelDuration += travel;
+            for (int j = 0; j < routes.size(); j++) {
+                Patient patient;
+                double travel;
+                boolean toDeposit = routes.get(j) == 0;
 
-                if(nurseClock < patient.start_time){ // Wait
-                    nurseClock = patient.start_time;
+                if (newNurse & toDeposit) { // Skip nurse
+                    continue;
                 }
 
-                if(nurseClock > patient.end_time){ // Missed patient entirely
-                    penaltyMissedCareTime = patient.care_time + (nurseClock - patient.end_time);
-                } 
+                else if (toDeposit) { // To Deposit
+                    travel = travelTimes[routes.get(j - 1)][routes.get(j)];
+                    nurseClock += travel;
+                    travelDuration += travel;
 
-                else { // Arrived in time window
-                    double availableCareTime =  patient.end_time - nurseClock;
-                    double restCareTime = availableCareTime - patient.care_time;
-                    if(restCareTime < 0){ // Penalty! Arrived too late
-                        penaltyMissedCareTime += -restCareTime; // Care time missing
-                        nurseClock = patient.end_time;
-                        nurseUsage += availableCareTime;
+                    if (nurseClock > depot.return_time) { // To late
+                        penaltyMissedCareTime +=depot.return_time - nurseClock;
                     }
-                    else{ // Nailed it!
-                        nurseUsage += patient.care_time;
-                        nurseClock += patient.care_time;
-                    }
-                }
-
-                if (routes.get(j + 1) == 0){ // Arrival at Depot
-                    if(nurseUsage > capacityNurse){ // To much work for one nurse
+                    if (nurseUsage > capacityNurse) { // To much work for one nurse
                         penaltyCapacity += nurseUsage - capacityNurse;
                     }
                     nurseUsage = 0; // Reset for new nurse
                     nurseClock = 0;
+                    newNurse = true;
+                }
+
+                else { // To Patient
+                    if (newNurse) { // From Deposit
+                        patient = this.patients.get(routes.get(j));
+                        travel = travelTimes[0][routes.get(j)];
+                        newNurse = false;
+                    }
+                    else { // From Patient
+                        patient = this.patients.get(routes.get(j));
+                        travel = travelTimes[routes.get(j - 1)][routes.get(j)];
+                    }
+
+                    nurseClock += travel;
+                    travelDuration += travel;
+                    if (nurseClock < patient.start_time) { // Wait
+                        nurseClock = patient.start_time;
+                    }
+
+                    if (nurseClock > patient.end_time) { // Missed patient entirely
+                        penaltyMissedCareTime = patient.care_time + (nurseClock - patient.end_time);
+                    }
+
+                    else { // Arrived in time window
+                        double availableCareTime = patient.end_time - nurseClock;
+                        double restCareTime = availableCareTime - patient.care_time;
+                        if (restCareTime < 0) { // Penalty! Arrived too late
+                            penaltyMissedCareTime += -restCareTime; // Care time missing
+                            nurseClock = patient.end_time;
+                            nurseUsage += availableCareTime;
+                        } else { // Nailed it!
+                            nurseUsage += patient.care_time;
+                            nurseClock += patient.care_time;
+                        }
+                    }
                 }
             }
             double penalty = (penaltyMissedCareTime + penaltyCapacity) * penaltyScale;
             double penaltyFitness = travelDuration + penalty;
-            if( (penaltyMissedCareTime + penaltyCapacity) == 0){
+
+            if (penalty == 0) {
                 System.out.println("LGTM!");
             }
 
             fitness.add(penaltyFitness);
 
-            if(penaltyFitness > maxVal){
+            if (penaltyFitness > maxVal) {
                 maxVal = penaltyFitness;
             }
-            if(penaltyFitness < minVal){
+            if (penaltyFitness < minVal) {
                 minVal = penaltyFitness;
             }
-            if(penalty < minPenVal){
+            if (penalty < minPenVal) {
                 this.prevMinPenalty = penalty;
             }
         }
@@ -128,13 +156,13 @@ public class Fitness {
 
     public ArrayList<Double> transformFitnessArray(ArrayList<Double> fitness, double maxValue) {
         ArrayList<Double> transformedFitness = new ArrayList<Double>();
-        
+
         ListIterator<Double> iter = fitness.listIterator();
-        while( iter.hasNext() ){
+        while (iter.hasNext()) {
             Double value = iter.next();
             Double newValue = maxValue - value;
             transformedFitness.add(newValue);
         }
         return transformedFitness;
-    }   
+    }
 }

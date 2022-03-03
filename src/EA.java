@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -8,7 +9,7 @@ import org.json.simple.parser.ParseException;
 public class EA {
     public static void main(String args[]) {
         // Hyper-parameters
-        int epochs = 20;
+        int epochs = 300;
         int trainInstanceIndex = 2;
         int popSize = 1000;
         double pC = 0.9;
@@ -25,7 +26,7 @@ public class EA {
         int capacityNurse = Integer.parseInt(Long.toString((Long) trainInstance.get("capacity_nurse")));
         double benchmark = (double) trainInstance.get("benchmark");
         Depot depot = data.getDepot(trainInstance);
-        Patient[] patients = data.getPatients(trainInstance);
+        HashMap<Integer, Patient> patients = data.getPatients(trainInstance);
         double[][] travelTimes = data.getTravelTime(trainInstance);
 
         // Set up SGA
@@ -37,8 +38,9 @@ public class EA {
             Fitness fitnessClass = new Fitness(nbrNurses, capacityNurse, depot, patients, travelTimes);
             ArrayList<Double> populationgFitness = fitnessClass.getPenaltyFitness(population);
             double popMaxFitVal = fitnessClass.prevMaxFitness;
-            System.out.println("Min Fitness " + fitnessClass.prevMinFitness);
+            // System.out.println("Min Fitness " + fitnessClass.prevMinFitness);
             System.out.println("Min Penalty " + fitnessClass.prevMinPenalty);
+            System.out.println("Min Fitness " + fitnessClass.prevMinFitness);
             ArrayList<Double> transFitness = fitnessClass.transformFitnessArray(populationgFitness, popMaxFitVal);
 
             // Parent Selection

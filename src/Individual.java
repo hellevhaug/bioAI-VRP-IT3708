@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.simple.JSONObject;
 
@@ -8,12 +9,12 @@ public class Individual {
     public int capacityNurse;
     public Depot depot;
     public double[][] travelTimes;
-    public Patient[] patients;
+    public HashMap<Integer, Patient> patients;
 
     public ArrayList<Integer> routes;
 
 
-    public Individual(int nbrNurses, int capacityNurse, Depot depot, Patient[] patients, double[][] travelTimes) {
+    public Individual(int nbrNurses, int capacityNurse, Depot depot, HashMap<Integer, Patient> patients, double[][] travelTimes) {
         this.nbrNurses = nbrNurses;
         this.capacityNurse = capacityNurse;
         this.depot = depot;
@@ -23,24 +24,24 @@ public class Individual {
     
     public void generateIndArray(JSONObject trainInstance, int activeNurses) {
         ArrayList<Integer> individual = new ArrayList<Integer>();
-        if (!(this.patients.length % (activeNurses) == 0)) {
+        if (!(this.patients.size() % (activeNurses) == 0)) {
             throw new AssertionError("Extend functionality for leftover patients");
         }
-        double patientPerNurse = this.patients.length / activeNurses;
+        double patientPerNurse = this.patients.size() / activeNurses;
         ArrayList<Integer> patientIndices = new ArrayList<Integer>();
-        for (int i = 0; i < this.patients.length; i++) {
-            patientIndices.add(i);
+        for (int i = 0; i < this.patients.size(); i++) {
+            patientIndices.add(i+1);
         }
-        individual.add(0); // Depot start
         for (int i = 0; i < activeNurses; i++) {
-            for (int j = 1; j < this.patients.length; j++) {
-                if (j <= patientPerNurse) {
-                    int rando = (int) ((Math.random() * patientIndices.size()));
-                    individual.add(patientIndices.get(rando));
-                    patientIndices.remove(rando);
-                }
+            for (int j = 1; j <= patientPerNurse; j++) {
+                int rando = (int) ((Math.random() * patientIndices.size()));
+                individual.add(patientIndices.get(rando));
+                patientIndices.remove(rando);
+                
             }
-            individual.add(0); // Depot end
+            if (i < activeNurses - 1) {  // Depot divider between nurses
+                individual.add(0);
+            }
         }
         if (!(patientIndices.size() == 0)) {
             throw new AssertionError("Not all patients are distributed, extend functionality!");

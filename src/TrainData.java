@@ -1,6 +1,7 @@
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -56,9 +57,9 @@ public class TrainData {
     return travelTimes;
   }
 
-  public Patient[] getPatients(JSONObject trainInstance) {
+  public HashMap<Integer, Patient> getPatients(JSONObject trainInstance) {
     JSONObject JSONpatients = (JSONObject) trainInstance.get("patients");
-    Patient[] patients = new Patient[JSONpatients.size()];
+    HashMap<Integer, Patient> patients = new HashMap<Integer, Patient>();
     Iterator<String> keys = JSONpatients.keySet().iterator();
 
     while (keys.hasNext()) {
@@ -66,7 +67,7 @@ public class TrainData {
       if (JSONpatients.get(key) instanceof JSONObject) {
         JSONObject jsonPatient = (JSONObject) JSONpatients.get(key);
         Patient patient = new Patient(jsonPatient);
-        patients[Integer.parseInt(key) - 1] = patient;
+        patients.put(Integer. parseInt(key), patient); // Meaing patient "1" is in index = 0
       }
     }
     return patients;
