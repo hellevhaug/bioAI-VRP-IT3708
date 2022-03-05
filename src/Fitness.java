@@ -12,6 +12,7 @@ public class Fitness {
     public double prevMinFitness;
     public double prevMinPenalty;
     public ArrayList<ArrayList<Double>> fitnessMatrix; // Keeps record of the fitness for each path
+    public Individual bestIndividual;
 
     public Fitness(int nbrNurses, int capacityNurse, Depot depot, HashMap<Integer, Patient> patients,
             double[][] travelTimes) {
@@ -72,6 +73,7 @@ public class Fitness {
                 Patient patient;
                 double travel;
                 boolean toDeposit = routes.get(j) == 0;
+                int patientIndex =  routes.get(j);
 
                 if (newNurse & toDeposit) { // Skip nurse
                     continue;
@@ -83,7 +85,7 @@ public class Fitness {
                     travelDuration += travel;
 
                     if (nurseClock > depot.return_time) { // To late
-                        penaltyMissedCareTime +=depot.return_time - nurseClock;
+                        penaltyMissedCareTime += depot.return_time - nurseClock;
                     }
                     if (nurseUsage > capacityNurse) { // To much work for one nurse
                         penaltyCapacity += nurseUsage - capacityNurse;
@@ -111,7 +113,7 @@ public class Fitness {
                     }
 
                     if (nurseClock > patient.end_time) { // Missed patient entirely
-                        penaltyMissedCareTime = patient.care_time + (nurseClock - patient.end_time);
+                        penaltyMissedCareTime += patient.care_time + (nurseClock - patient.end_time);
                     }
 
                     else { // Arrived in time window
@@ -126,14 +128,11 @@ public class Fitness {
                             nurseClock += patient.care_time;
                         }
                     }
+                    int lo = 3;
                 }
             }
             double penalty = (penaltyMissedCareTime + penaltyCapacity) * penaltyScale;
             double penaltyFitness = travelDuration + penalty;
-
-            if (penalty == 0) {
-                System.out.println("LGTM!");
-            }
 
             fitness.add(penaltyFitness);
 
@@ -142,14 +141,16 @@ public class Fitness {
             }
             if (penaltyFitness < minVal) {
                 minVal = penaltyFitness;
+                this.bestIndividual = individual;
             }
             if (penalty < minPenVal) {
-                this.prevMinPenalty = penalty;
+                minPenVal = penalty;
             }
         }
 
         this.prevMaxFitness = maxVal;
         this.prevMinFitness = minVal;
+        this.prevMinPenalty = minPenVal;
 
         return fitness;
     }

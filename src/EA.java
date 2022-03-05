@@ -9,7 +9,7 @@ import org.json.simple.parser.ParseException;
 public class EA {
     public static void main(String args[]) {
         // Hyper-parameters
-        int epochs = 300;
+        int epochs = 2000;
         int trainInstanceIndex = 2;
         int popSize = 1000;
         double pC = 0.9;
@@ -68,5 +68,8 @@ public class EA {
             ArrayList<Double> survivorTransFitness = survivorClass.prevSurvivorFitness;
             population = survivors;
         }
+        Fitness fitnessClass = new Fitness(nbrNurses, capacityNurse, depot, patients, travelTimes);
+        ArrayList<Double> populationgFitness = fitnessClass.getPenaltyFitness(population);
+        System.out.println(fitnessClass.bestIndividual.routes);
     }
 }
