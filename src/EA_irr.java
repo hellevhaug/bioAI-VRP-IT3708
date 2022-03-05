@@ -9,8 +9,8 @@ import org.json.simple.parser.ParseException;
 public class EA_irr {
     public static void main(String args[]) {
         // Hyper-parameters
-        int epochs = 300;
-        int trainInstanceIndex = 2;
+        int epochs = 200;
+        int trainInstanceIndex = 7;
         int popSize = 1000;
         double pC = 0.9;
         double pM = 0.007;
@@ -24,7 +24,7 @@ public class EA_irr {
         // Get datastructuresgit 
         int nbrNurses = Integer.parseInt(Long.toString((Long) trainInstance.get("nbr_nurses")));
         int capacityNurse = Integer.parseInt(Long.toString((Long) trainInstance.get("capacity_nurse")));
-        double benchmark = (double) trainInstance.get("benchmark");
+       // double benchmark = (double) trainInstance.get("benchmark");
         Depot depot = data.getDepot(trainInstance);
         HashMap<Integer, Patient> patients = data.getPatients(trainInstance);
         double[][] travelTimes = data.getTravelTime(trainInstance);
@@ -41,6 +41,8 @@ public class EA_irr {
             // System.out.println("Min Fitness " + fitnessClass.prevMinFitness);
             System.out.println("Min Penalty " + fitnessClass.prevMinPenalty);
             System.out.println("Min Fitness " + fitnessClass.prevMinFitness);
+            System.out.println("Epoch " + epoch);
+
             ArrayList<Double> transFitness = fitnessClass.transformFitnessArray(populationgFitness, popMaxFitVal);
 
             // Parent Selection
@@ -68,5 +70,8 @@ public class EA_irr {
             ArrayList<Double> survivorTransFitness = survivorClass.prevSurvivorFitness;
             population = survivors;
         }
+        Fitness fitnessClass = new Fitness(nbrNurses, capacityNurse, depot, patients, travelTimes);
+        ArrayList<Double> populationgFitness = fitnessClass.getPenaltyFitness(population);
+        System.out.println(fitnessClass.bestIndividual.routes);
     }
 }

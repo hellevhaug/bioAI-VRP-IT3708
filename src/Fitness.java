@@ -139,7 +139,7 @@ public class Fitness {
             if (penaltyFitness > maxVal) {
                 maxVal = penaltyFitness;
             }
-            if (penaltyFitness < minVal) {
+            if (penalty == 0 & penaltyFitness < minVal) {
                 minVal = penaltyFitness;
                 this.bestIndividual = individual;
             }
