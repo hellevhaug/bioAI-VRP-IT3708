@@ -13,6 +13,8 @@ public class Fitness {
     public double prevMinPenalty;
     public ArrayList<ArrayList<Double>> fitnessMatrix; // Keeps record of the fitness for each path
     public Individual bestIndividual;
+    public double bestFitness;
+
 
     public Fitness(int nbrNurses, int capacityNurse, Depot depot, HashMap<Integer, Patient> patients,
             double[][] travelTimes) {
@@ -21,9 +23,10 @@ public class Fitness {
         this.depot = depot;
         this.travelTimes = travelTimes;
         this.patients = patients;
+        this.bestFitness = Math.pow(10,10); 
     }
 
-    // Naively checks route duration without any feasibility check
+    // Naively checks route duration without any feasibility test
     public ArrayList<Double> getRegularFitness(ArrayList<Individual> population) {
         ArrayList<Double> fitness = new ArrayList<Double>();
         double maxVal = 0;
@@ -128,7 +131,6 @@ public class Fitness {
                             nurseClock += patient.care_time;
                         }
                     }
-                    int lo = 3;
                 }
             }
             double penalty = (penaltyMissedCareTime + penaltyCapacity) * penaltyScale;
@@ -139,8 +141,8 @@ public class Fitness {
             if (penaltyFitness > maxVal) {
                 maxVal = penaltyFitness;
             }
-            if (penalty == 0 & penaltyFitness < minVal) {
-                minVal = penaltyFitness;
+            if (penalty == 0 & penaltyFitness < bestFitness) {
+                this.bestFitness = penaltyFitness;
                 this.bestIndividual = individual;
             }
             if (penalty < minPenVal) {

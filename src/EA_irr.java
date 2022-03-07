@@ -40,7 +40,7 @@ public class EA_irr {
             double popMaxFitVal = fitnessClass.prevMaxFitness;
             // System.out.println("Min Fitness " + fitnessClass.prevMinFitness);
             System.out.println("Min Penalty " + fitnessClass.prevMinPenalty);
-            System.out.println("Min Fitness " + fitnessClass.prevMinFitness);
+            System.out.println("Min Fitness " + fitnessClass.bestFitness);
             System.out.println("Epoch " + epoch);
 
             ArrayList<Double> transFitness = fitnessClass.transformFitnessArray(populationgFitness, popMaxFitVal);
