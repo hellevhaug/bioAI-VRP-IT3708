@@ -72,11 +72,11 @@ public class Fitness {
             double nurseUsage = 0;
             boolean newNurse = true;
 
-            for (int j = 0; j < routes.size(); j++) {
+            for (int j = 0; j <= routes.size(); j++) {
                 Patient patient;
                 double travel;
-                boolean toDeposit = routes.get(j) == 0;
-                int patientIndex =  routes.get(j);
+                boolean toDeposit = j < routes.size() ? (routes.get(j) == 0 ? true : false) : false;
+                boolean lastStop = j == routes.size() ? true : false;
 
                 if (newNurse & toDeposit) { // Skip nurse
                     continue;
@@ -96,6 +96,19 @@ public class Fitness {
                     nurseUsage = 0; // Reset for new nurse
                     nurseClock = 0;
                     newNurse = true;
+                }
+
+                else if (lastStop){ // To Last Depot
+                    travel = travelTimes[routes.get(j - 1)][0];
+                    nurseClock += travel;
+                    travelDuration += travel;
+
+                    if (nurseClock > depot.return_time) { // To late
+                        penaltyMissedCareTime += depot.return_time - nurseClock;
+                    }
+                    if (nurseUsage > capacityNurse) { // To much work for one nurse
+                        penaltyCapacity += nurseUsage - capacityNurse;
+                    }
                 }
 
                 else { // To Patient
