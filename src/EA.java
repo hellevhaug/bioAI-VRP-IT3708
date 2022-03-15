@@ -9,12 +9,21 @@ import org.json.simple.parser.ParseException;
 public class EA {
         public static void main(String args[]) {
                 // Hyper-parameters
+<<<<<<< HEAD
                 int epochs = 200;
                 int trainInstanceIndex = 1;
                 int popSize = 1000;
                 double pC = 0.5;
                 double pM = 0.007;
                 int lambda = 20; // 3 is more popular now a days
+=======
+                int epochs = 100;
+                int trainInstanceIndex = 9;
+                int popSize = 300;
+                double pC = 0.5;
+                double pM = 0.007;
+                int lambda = 50; // 3 is more populare now a days
+>>>>>>> 9650d42d8eac0695fab4b9e1d8c3afb76adca372
 
                 // Load JSON
                 TrainData data = new TrainData();
@@ -41,9 +50,10 @@ public class EA {
                 for (int epoch = 1; epoch < epochs; epoch++) {
                         // Fitness of new Popuation
                         ArrayList<Double> populationgFitness = fitnessClass.getPenaltyFitness(population);
-                        double popMaxFitVal = fitnessClass.prevMaxFitness;
-                        System.out.println("Min Penalty " + fitnessClass.prevMinPenalty);
-                        System.out.println("Min Fitness " + fitnessClass.bestFitness);
+                        double popMaxFitVal = fitnessClass.MaxFitness;
+                        System.out.println("Min Penalty " + fitnessClass.MinPenalty);
+                        System.out.println("Min non Feasable Fitness " + fitnessClass.MinFitness);
+                        System.out.println("Min Fitness " + fitnessClass.bestFeasibleFitness);
                         System.out.println("Epoch " + epoch);
                         ArrayList<Double> transFitness = fitnessClass.transformFitnessArray(populationgFitness,
                                         popMaxFitVal);
@@ -60,7 +70,7 @@ public class EA {
                         ArrayList<Double> offspringFitness = fitnessClass.getPenaltyFitness(offspring); // This can
                                                                                                         // definitly
                                                                                                         // be optimized
-                        double offMaxFitVal = fitnessClass.prevMaxFitness;
+                        double offMaxFitVal = fitnessClass.MaxFitness;
                         ArrayList<Double> offspringTransFitness = fitnessClass.transformFitnessArray(offspringFitness,
                                         offMaxFitVal);
 
@@ -71,10 +81,22 @@ public class EA {
                         population = survivors;
                 }
                 ArrayList<Double> populationgFitness = fitnessClass.getPenaltyFitness(population);
+<<<<<<< HEAD
                 Validation validationClass = new Validation();
                 if (fitnessClass.bestFitness < Math.pow(10, 10)) {
                         System.out.println("\n" + validationClass.getValidationFormat(fitnessClass.bestIndividual) + "\n");
                         System.out.println("Routes " + fitnessClass.bestIndividual.routes);
+=======
+                Util utilClass = new Util();
+                if (fitnessClass.bestFeasibleFitness < Math.pow(10, 10)) {
+                        String bestRoutes = utilClass.getValidationFormat(fitnessClass.bestFeasibleIndividual);
+                        System.out.println("\n" + bestRoutes + "\n");
+                        utilClass.createFile(bestRoutes);
+>>>>>>> 9650d42d8eac0695fab4b9e1d8c3afb76adca372
                 }
+                else {
+                        String bestRoutes = utilClass.getValidationFormat(fitnessClass.bestNonFeasibleIndividual);
+                        System.out.println("\n" + bestRoutes + "\n");
+                        utilClass.createFile(bestRoutes);                }
         }
 }

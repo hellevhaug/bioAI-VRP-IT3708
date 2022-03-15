@@ -8,12 +8,15 @@ public class Fitness {
     public Depot depot;
     public double[][] travelTimes;
     public HashMap<Integer, Patient> patients;
-    public double prevMaxFitness;
-    public double prevMinFitness;
-    public double prevMinPenalty;
+    public double MaxFitness;
+    public double MinFitness;
+    public double MinPenalty;
     public ArrayList<ArrayList<Double>> fitnessMatrix; // Keeps record of the fitness for each path
-    public Individual bestIndividual;
-    public double bestFitness;
+    public Individual bestFeasibleIndividual;
+    public Individual bestNonFeasibleIndividual;
+    public double bestFeasibleFitness;
+    public double bestNonFeasibleFitness;
+
 
 
     public Fitness(int nbrNurses, int capacityNurse, Depot depot, HashMap<Integer, Patient> patients,
@@ -23,7 +26,9 @@ public class Fitness {
         this.depot = depot;
         this.travelTimes = travelTimes;
         this.patients = patients;
-        this.bestFitness = Math.pow(10,10); 
+        this.bestFeasibleFitness = Math.pow(10,10); 
+        this.bestNonFeasibleFitness = Math.pow(10,10); 
+
     }
 
     // Naively checks route duration without any feasibility test
@@ -47,8 +52,8 @@ public class Fitness {
             }
             fitness.add(indFitness);
         }
-        this.prevMaxFitness = maxVal;
-        this.prevMinFitness = minVal;
+        this.MaxFitness = maxVal;
+        this.MinFitness = minVal;
 
         return fitness;
     }
@@ -58,7 +63,7 @@ public class Fitness {
         double maxVal = 0;
         double minVal = Math.pow(10, 10);
         double minPenVal = Math.pow(10, 10);
-        double penaltyScale = 100;
+        double penaltyScale = 1;
         for (int i = 0; i < population.size(); i++) {
 
             Individual individual = population.get(i);
@@ -154,18 +159,25 @@ public class Fitness {
             if (penaltyFitness > maxVal) {
                 maxVal = penaltyFitness;
             }
-            if (penalty == 0 & penaltyFitness < bestFitness) {
-                this.bestFitness = penaltyFitness;
-                this.bestIndividual = individual;
+            if (penalty == 0 & penaltyFitness < bestFeasibleFitness) {
+                this.bestFeasibleFitness = penaltyFitness;
+                this.bestFeasibleIndividual = individual;
+            }
+            else if (penaltyFitness < bestNonFeasibleFitness) {
+                this.bestNonFeasibleFitness = penaltyFitness;
+                this.bestNonFeasibleIndividual = individual;
             }
             if (penalty < minPenVal) {
                 minPenVal = penalty;
+
+            }
+            if (travelDuration < minVal) {
+                minVal = travelDuration;
             }
         }
-
-        this.prevMaxFitness = maxVal;
-        this.prevMinFitness = minVal;
-        this.prevMinPenalty = minPenVal;
+        this.MaxFitness = maxVal;
+        this.MinFitness = minVal;
+        this.MinPenalty = minPenVal;
 
         return fitness;
     }
