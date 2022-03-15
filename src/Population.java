@@ -24,11 +24,25 @@ public class Population {
         individual.generateIndArray(trainInstance, activeNurses);
         return individual;
     }
+
+    public Individual generateGreedyIndArray(JSONObject trainInstance, int activeNurses){
+        Individual individual = new Individual(nbrNurses, capacityNurse, depot, patients, travelTimes);
+        individual.generateGreedyIndArray2(trainInstance, activeNurses);
+        return individual;
+    }
   
     public ArrayList<Individual> generatePopArray(JSONObject trainInstance, int activeNurses, int nbrIndividuals) {
         ArrayList<Individual> population = new ArrayList<Individual>(nbrIndividuals);
         for (int i = 0; i < nbrIndividuals; i++) {
             population.add(generateIndArray(trainInstance, activeNurses));
+        }
+        return population;
+    }
+
+    public ArrayList<Individual> greedyGeneratePopArray(JSONObject trainInstance, int activeNurses, int nbrIndividuals){
+        ArrayList<Individual> population = new ArrayList<Individual>(nbrIndividuals);
+        for (int i = 0; i < nbrIndividuals; i++) {
+            population.add(generateGreedyIndArray(trainInstance, activeNurses));
         }
         return population;
     }

@@ -10,11 +10,11 @@ public class EA {
         public static void main(String args[]) {
                 // Hyper-parameters
                 int epochs = 200;
-                int trainInstanceIndex = 9;
+                int trainInstanceIndex = 1;
                 int popSize = 1000;
                 double pC = 0.5;
                 double pM = 0.007;
-                int lambda = 20; // 3 is more populare now a days
+                int lambda = 20; // 3 is more popular now a days
 
                 // Load JSON
                 TrainData data = new TrainData();
@@ -36,7 +36,7 @@ public class EA {
                 Survivor survivorClass = new Survivor(nbrNurses, capacityNurse, depot, patients, travelTimes);
 
                 // Set up SGA
-                ArrayList<Individual> population = populationClass.generatePopArray(trainInstance, nbrNurses, popSize);
+                ArrayList<Individual> population = populationClass.greedyGeneratePopArray(trainInstance, nbrNurses, popSize);
 
                 for (int epoch = 1; epoch < epochs; epoch++) {
                         // Fitness of new Popuation
@@ -74,7 +74,7 @@ public class EA {
                 Validation validationClass = new Validation();
                 if (fitnessClass.bestFitness < Math.pow(10, 10)) {
                         System.out.println("\n" + validationClass.getValidationFormat(fitnessClass.bestIndividual) + "\n");
-                        //System.out.println("Routes " + fitnessClass.bestIndividual.routes);
+                        System.out.println("Routes " + fitnessClass.bestIndividual.routes);
                 }
         }
 }
