@@ -76,11 +76,12 @@ public class EA {
                 if (fitnessClass.bestFeasibleFitness < Math.pow(10, 10)) {
                         String bestRoutes = utilClass.getValidationFormat(fitnessClass.bestFeasibleIndividual);
                         System.out.println("\n" + bestRoutes + "\n");
-                        utilClass.createFile(bestRoutes);
+                        utilClass.createFile(bestRoutes,  trainInstanceIndex);
                 }
                 else {
                         String bestRoutes = utilClass.getValidationFormat(fitnessClass.bestNonFeasibleIndividual);
                         System.out.println("\n" + bestRoutes + "\n");
-                        utilClass.createFile(bestRoutes);                }
+                        utilClass.createFile(bestRoutes,  trainInstanceIndex);                
+                }
         }
 }

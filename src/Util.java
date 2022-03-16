@@ -27,7 +27,7 @@ public class Util {
         return result;
     }
 
-  public void createFile(String routes) {
+  public void createFile(String routes, int instance) {
     try {
       File myObj = new File("routes.txt");
       if (myObj.createNewFile()) {
@@ -41,6 +41,7 @@ public class Util {
     }
     try {
         FileWriter myWriter = new FileWriter("routes.txt");
+        myWriter.write(instance + "\n");
         myWriter.write(routes);
         myWriter.close();
         System.out.println("Successfully wrote to the file.");

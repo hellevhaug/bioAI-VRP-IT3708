@@ -10,7 +10,7 @@ public class MultiThreadEA extends Thread {
     ArrayList<Individual> convPopulation;
 
     public static void main(String args[]) {
-        int nbrThreads = 3;
+        int nbrThreads = 5;
         ArrayList<MultiThreadEA> threadList = new ArrayList<MultiThreadEA>(nbrThreads);
         for (int i = 0; i < nbrThreads; i++) {
             MultiThreadEA thread = new MultiThreadEA();
@@ -30,7 +30,7 @@ public class MultiThreadEA extends Thread {
 
         // Hyper-parameters
         int epochs = 100;
-        int trainInstanceIndex = 9;
+        int trainInstanceIndex = 1;
         int popSize = 500;
         double pC = 0.5;
         double pM = 0.007;
@@ -92,19 +92,23 @@ public class MultiThreadEA extends Thread {
             population = survivors;
         }
         ArrayList<Double> populationgFitness = fitnessClass.getPenaltyFitness(population);
-        Util validationClass = new Util();
+        Util utilClass = new Util();
         if (fitnessClass.bestFeasibleFitness < Math.pow(10, 10)) {
-            System.out.println("\n" + validationClass.getValidationFormat(fitnessClass.bestFeasibleIndividual) + "\n");
-        } else {
-            System.out
-                    .println("\n" + validationClass.getValidationFormat(fitnessClass.bestNonFeasibleIndividual) + "\n");
-        }
+            String bestRoutes = utilClass.getValidationFormat(fitnessClass.bestFeasibleIndividual);
+            System.out.println("\n" + bestRoutes + "\n");
+            utilClass.createFile(bestRoutes,  trainInstanceIndex);
+    }
+    else {
+            String bestRoutes = utilClass.getValidationFormat(fitnessClass.bestNonFeasibleIndividual);
+            System.out.println("\n" + bestRoutes + "\n");
+            utilClass.createFile(bestRoutes,  trainInstanceIndex);                
+    }
     }
 
     public void run() {
         // Hyper-parameters
         int epochs = 200;
-        int trainInstanceIndex = 9;
+        int trainInstanceIndex = 1;
         int popSize = 300;
         double pC = 0.5;
         double pM = 0.007;
@@ -166,14 +170,6 @@ public class MultiThreadEA extends Thread {
             population = survivors;
         }
         ArrayList<Double> populationgFitness = fitnessClass.getPenaltyFitness(population);
-        Util validationClass = new Util();
-
-        if (fitnessClass.bestFeasibleFitness < Math.pow(10, 10)) {
-            System.out.println("\n" + validationClass.getValidationFormat(fitnessClass.bestFeasibleIndividual) + "\n");
-        } else {
-            System.out
-                    .println("\n" + validationClass.getValidationFormat(fitnessClass.bestNonFeasibleIndividual) + "\n");
-        }
         this.convPopulation = population;
     }
 
