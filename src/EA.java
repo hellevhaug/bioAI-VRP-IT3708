@@ -91,12 +91,17 @@ public class EA {
                 if (fitnessClass.bestFeasibleFitness < Math.pow(10, 10)) {
                         String bestRoutes = utilClass.getValidationFormat(fitnessClass.bestFeasibleIndividual);
                         System.out.println("\n" + bestRoutes + "\n");
+<<<<<<< HEAD
                         utilClass.createFile(bestRoutes);
 >>>>>>> 9650d42d8eac0695fab4b9e1d8c3afb76adca372
+=======
+                        utilClass.createFile(bestRoutes,  trainInstanceIndex);
+>>>>>>> 06b9ff2595cbe9f31f490d2f57903ac93b785072
                 }
                 else {
                         String bestRoutes = utilClass.getValidationFormat(fitnessClass.bestNonFeasibleIndividual);
                         System.out.println("\n" + bestRoutes + "\n");
-                        utilClass.createFile(bestRoutes);                }
+                        utilClass.createFile(bestRoutes,  trainInstanceIndex);                
+                }
         }
 }
