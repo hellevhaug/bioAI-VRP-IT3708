@@ -16,6 +16,7 @@ public class Fitness {
     public Individual bestNonFeasibleIndividual;
     public double bestFeasibleFitness;
     public double bestNonFeasibleFitness;
+    public String penaltyType;
 
 
 
@@ -28,6 +29,7 @@ public class Fitness {
         this.patients = patients;
         this.bestFeasibleFitness = Math.pow(10,10); 
         this.bestNonFeasibleFitness = Math.pow(10,10); 
+        this.penaltyType = "";
 
     }
 
@@ -143,9 +145,9 @@ public class Fitness {
                         if (restCareTime < 0) { // Penalty! Arrived too late
                             penaltyMissedCareTime += -restCareTime; // Care time missing
                             nurseClock = patient.end_time;
-                            nurseUsage += availableCareTime;
+                            nurseUsage += patient.demand;
                         } else { // Nailed it!
-                            nurseUsage += patient.care_time;
+                            nurseUsage += patient.demand;
                             nurseClock += patient.care_time;
                         }
                     }
@@ -166,6 +168,7 @@ public class Fitness {
             else if (penaltyFitness < bestNonFeasibleFitness) {
                 this.bestNonFeasibleFitness = penaltyFitness;
                 this.bestNonFeasibleIndividual = individual;
+                this.penaltyType = "Timewindow: " + penaltyMissedCareTime + ", Capacity: " + penaltyCapacity;
             }
             if (penalty < minPenVal) {
                 minPenVal = penalty;

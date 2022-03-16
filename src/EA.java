@@ -10,7 +10,7 @@ public class EA {
         public static void main(String args[]) {
                 // Hyper-parameters
                 int epochs = 100;
-                int trainInstanceIndex = 9;
+                int trainInstanceIndex = 0;
                 int popSize = 300;
                 double pC = 0.5;
                 double pM = 0.007;
@@ -45,6 +45,7 @@ public class EA {
                         System.out.println("Min Penalty " + fitnessClass.MinPenalty);
                         System.out.println("Min non Feasable Fitness " + fitnessClass.MinFitness);
                         System.out.println("Min Fitness " + fitnessClass.bestFeasibleFitness);
+                        System.out.println(fitnessClass.penaltyType);
                         System.out.println("Epoch " + epoch);
                         ArrayList<Double> transFitness = fitnessClass.transformFitnessArray(populationgFitness,
                                         popMaxFitVal);
@@ -83,5 +84,9 @@ public class EA {
                         System.out.println("\n" + bestRoutes + "\n");
                         utilClass.createFile(bestRoutes,  trainInstanceIndex);                
                 }
+
+                ArrayList<Individual> bestInd = new ArrayList<Individual>();
+                bestInd.add(fitnessClass.bestNonFeasibleIndividual);
+                fitnessClass.getPenaltyFitness(bestInd);
         }
 }

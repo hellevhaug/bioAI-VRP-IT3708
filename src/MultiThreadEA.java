@@ -10,7 +10,7 @@ public class MultiThreadEA extends Thread {
     ArrayList<Individual> convPopulation;
 
     public static void main(String args[]) {
-        int nbrThreads = 5;
+        int nbrThreads = 3;
         ArrayList<MultiThreadEA> threadList = new ArrayList<MultiThreadEA>(nbrThreads);
         for (int i = 0; i < nbrThreads; i++) {
             MultiThreadEA thread = new MultiThreadEA();
@@ -34,7 +34,7 @@ public class MultiThreadEA extends Thread {
         int popSize = 500;
         double pC = 0.5;
         double pM = 0.007;
-        int lambda = 50; // 3 is more populare now a days
+        int lambda = 5; // 3 is more populare now a days
 
         // Load JSON
         TrainData data = new TrainData();
