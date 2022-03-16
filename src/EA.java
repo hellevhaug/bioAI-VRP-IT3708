@@ -9,21 +9,12 @@ import org.json.simple.parser.ParseException;
 public class EA {
         public static void main(String args[]) {
                 // Hyper-parameters
-<<<<<<< HEAD
-                int epochs = 200;
-                int trainInstanceIndex = 1;
-                int popSize = 1000;
-                double pC = 0.5;
-                double pM = 0.007;
-                int lambda = 20; // 3 is more popular now a days
-=======
                 int epochs = 100;
                 int trainInstanceIndex = 9;
                 int popSize = 300;
                 double pC = 0.5;
                 double pM = 0.007;
                 int lambda = 50; // 3 is more populare now a days
->>>>>>> 9650d42d8eac0695fab4b9e1d8c3afb76adca372
 
                 // Load JSON
                 TrainData data = new TrainData();
@@ -81,22 +72,11 @@ public class EA {
                         population = survivors;
                 }
                 ArrayList<Double> populationgFitness = fitnessClass.getPenaltyFitness(population);
-<<<<<<< HEAD
-                Validation validationClass = new Validation();
-                if (fitnessClass.bestFitness < Math.pow(10, 10)) {
-                        System.out.println("\n" + validationClass.getValidationFormat(fitnessClass.bestIndividual) + "\n");
-                        System.out.println("Routes " + fitnessClass.bestIndividual.routes);
-=======
                 Util utilClass = new Util();
                 if (fitnessClass.bestFeasibleFitness < Math.pow(10, 10)) {
                         String bestRoutes = utilClass.getValidationFormat(fitnessClass.bestFeasibleIndividual);
                         System.out.println("\n" + bestRoutes + "\n");
-<<<<<<< HEAD
-                        utilClass.createFile(bestRoutes);
->>>>>>> 9650d42d8eac0695fab4b9e1d8c3afb76adca372
-=======
                         utilClass.createFile(bestRoutes,  trainInstanceIndex);
->>>>>>> 06b9ff2595cbe9f31f490d2f57903ac93b785072
                 }
                 else {
                         String bestRoutes = utilClass.getValidationFormat(fitnessClass.bestNonFeasibleIndividual);
