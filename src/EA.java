@@ -9,8 +9,8 @@ import org.json.simple.parser.ParseException;
 public class EA {
         public static void main(String args[]) {
                 // Hyper-parameters
-                int epochs = 100;
-                int trainInstanceIndex = 0;
+                int epochs = 200;
+                int trainInstanceIndex = 10;
                 int popSize = 300;
                 double pC = 0.5;
                 double pM = 0.007;
@@ -24,7 +24,7 @@ public class EA {
                 // Get datastructuresgit
                 int nbrNurses = Integer.parseInt(Long.toString((Long) trainInstance.get("nbr_nurses")));
                 int capacityNurse = Integer.parseInt(Long.toString((Long) trainInstance.get("capacity_nurse")));
-                //double benchmark = (double) trainInstance.get("benchmark");
+                // double benchmark = (double) trainInstance.get("benchmark");
                 Depot depot = data.getDepot(trainInstance);
                 HashMap<Integer, Patient> patients = data.getPatients(trainInstance);
                 double[][] travelTimes = data.getTravelTime(trainInstance);
@@ -36,7 +36,8 @@ public class EA {
                 Survivor survivorClass = new Survivor(nbrNurses, capacityNurse, depot, patients, travelTimes);
 
                 // Set up SGA
-                ArrayList<Individual> population = populationClass.greedyGeneratePopArray(trainInstance, nbrNurses, popSize);
+                ArrayList<Individual> population = populationClass.greedyGeneratePopArray(trainInstance, nbrNurses,
+                                popSize);
 
                 for (int epoch = 1; epoch < epochs; epoch++) {
                         // Fitness of new Popuation
@@ -56,6 +57,7 @@ public class EA {
                         ArrayList<Double> parentTransFitness = parentClass.parentFitness;
 
                         // Offspring
+
                         ArrayList<Individual> offspring = offspringClass.createOffspring(parents, parentTransFitness,
                                         pC,
                                         pM, lambda);
@@ -73,20 +75,40 @@ public class EA {
                         population = survivors;
                 }
                 ArrayList<Double> populationgFitness = fitnessClass.getPenaltyFitness(population);
-                Util utilClass = new Util();
+                Util utilClass = new Util(nbrNurses, capacityNurse, depot, patients, travelTimes);
                 if (fitnessClass.bestFeasibleFitness < Math.pow(10, 10)) {
                         String bestRoutes = utilClass.getValidationFormat(fitnessClass.bestFeasibleIndividual);
                         System.out.println("\n" + bestRoutes + "\n");
-                        utilClass.createFile(bestRoutes,  trainInstanceIndex);
-                }
-                else {
+                        utilClass.createFile(bestRoutes, trainInstanceIndex);
+                } else {
                         String bestRoutes = utilClass.getValidationFormat(fitnessClass.bestNonFeasibleIndividual);
                         System.out.println("\n" + bestRoutes + "\n");
-                        utilClass.createFile(bestRoutes,  trainInstanceIndex);                
+                        utilClass.createFile(bestRoutes, trainInstanceIndex);
                 }
 
                 ArrayList<Individual> bestInd = new ArrayList<Individual>();
                 bestInd.add(fitnessClass.bestNonFeasibleIndividual);
                 fitnessClass.getPenaltyFitness(bestInd);
+
+                // Local Search
+                if (fitnessClass.bestFeasibleFitness < Math.pow(10, 10)) {
+                        LocalSearch localSeach = new LocalSearch(nbrNurses, capacityNurse, depot, patients,
+                                        travelTimes);
+                        Individual bestIndividual = fitnessClass.bestFeasibleIndividual;
+                        for (int i = 0; i < 100; i++) {
+                                bestIndividual = localSeach.oneStepHillClimb(bestIndividual);
+                        }
+
+                        ArrayList<Individual> bestIndTemp = new ArrayList<Individual>();
+                        bestIndTemp.add(bestIndividual);
+                        System.out.println(fitnessClass.getPenaltyFitness(bestIndTemp));
+                        fitnessClass.getPenaltyFitness(bestIndTemp);
+                
+                        String bestRoute = utilClass.getValidationFormat(bestIndividual);
+                        System.out.println("\n" + bestRoute + "\n");
+                        utilClass.createFile(bestRoute, trainInstanceIndex);
+
+                        utilClass.showTime(bestIndTemp);
+                }
         }
 }

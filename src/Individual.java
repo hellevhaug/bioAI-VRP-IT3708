@@ -33,13 +33,13 @@ public class Individual {
     public ArrayList<Integer> sortPatPri(){
         ArrayList<Integer> patPri = new ArrayList<Integer>();
             for (int i = 1; i <= this.patients.size(); i++){
-                int patStartTime = this.patients.get(i).start_time;
+                int patStartTime = this.patients.get(i).end_time;
                 if (patPri.isEmpty()){
                     patPri.add(i);
                 }
                 else {
                     for (int j = 0; j < patPri.size(); j++){
-                        int patStartTime1 = this.patients.get(patPri.get(j)).start_time;
+                        int patStartTime1 = this.patients.get(patPri.get(j)).end_time;
                         if (patStartTime < patStartTime1) {
                             patPri.add(j, i);
                             break;

@@ -161,8 +161,6 @@ public class Offspring {
                         individual.routes.add(swapIndex, tempValue);
                     }
                 }
-                // System.out.println("Routes " + individual.routes);
-                // System.out.println("Indices " + individual.routeIndices + "\n");
 
                 offsprings.add(individual);
             }

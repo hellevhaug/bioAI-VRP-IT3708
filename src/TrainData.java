@@ -19,7 +19,7 @@ public class TrainData {
 
     // JSON parser object to parse read file
     JSONParser jsonParser = new JSONParser();
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 13; i++) {
       try (FileReader reader = new FileReader(System.getProperty("user.dir") +
           "/src/train/" + "train_" + i + ".json")) {
         // Read JSON file

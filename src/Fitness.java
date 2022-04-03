@@ -65,7 +65,7 @@ public class Fitness {
         double maxVal = 0;
         double minVal = Math.pow(10, 10);
         double minPenVal = Math.pow(10, 10);
-        double penaltyScale = 1;
+        double penaltyScale = 5;
         for (int i = 0; i < population.size(); i++) {
 
             Individual individual = population.get(i);
